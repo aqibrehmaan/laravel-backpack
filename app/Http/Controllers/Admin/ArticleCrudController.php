@@ -18,10 +18,13 @@ class ArticleCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CloneOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\BulkCloneOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\BulkDeleteOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -33,7 +36,7 @@ class ArticleCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -42,6 +45,7 @@ class ArticleCrudController extends CrudController
         CRUD::column('category_id');
         CRUD::column('title');
         CRUD::column('slug');
+        CRUD::column('tags')->type('relationship');
         CRUD::column('content');
         CRUD::column('image');
         CRUD::column('status');
@@ -51,13 +55,13 @@ class ArticleCrudController extends CrudController
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
+         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
          */
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -66,24 +70,25 @@ class ArticleCrudController extends CrudController
         CRUD::setValidation(ArticleRequest::class);
 
         CRUD::field('category_id');
-        CRUD::field('title');
-        CRUD::field('slug');
-        CRUD::field('content');
+        CRUD::field('title')->size(6);
+        CRUD::field('slug')->size(6);
+        CRUD::field('content')->type('ckeditor');
         CRUD::field('image');
         CRUD::field('status');
         CRUD::field('date');
         CRUD::field('featured');
+        CRUD::field('tags')->type('relationship');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
+         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
          */
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
